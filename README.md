@@ -18,32 +18,18 @@
 
 ---
 
-## Apache Sqoop (Integrasi Database ke HDFS)
-
-### Dasar Teori
-
-Apache Sqoop adalah tool yang digunakan untuk mentransfer data antara database relasional dan Hadoop secara efisien. Sqoop memanfaatkan MapReduce sehingga proses impor dan ekspor data dapat dilakukan secara paralel.
-
----
-
-### Skenario Praktikum
-
-Mengimpor data tabel `employees` dari database MySQL ke dalam HDFS.
+## Sesi 1 — Apache Sqoop (Integrasi Database ke HDFS)
 
 ---
 
 ### Langkah Praktikum
 
-#### 1️⃣ Persiapan Database MySQL
+#### Masuk ke MySQL:
 
-Masuk ke MySQL:
-
-```bash
 mysql -u root -p
 
-Buat Database dan tabel:
+#### Buat database dan tabel:
 
-'''bash
 CREATE DATABASE company;
 USE company;
 
@@ -57,7 +43,7 @@ INSERT INTO employees VALUES
 (2, 'Budi'),
 (3, 'Citra');
 
-#### 2️⃣ Menjalankan Sqoop Import
+#### Menjalankan Sqoop Import
 
 ./bin/sqoop import \
 --connect jdbc:mysql://localhost/company \
@@ -67,52 +53,50 @@ INSERT INTO employees VALUES
 --target-dir /user/hadoop/employees \
 -m 1
 
-#### 3️⃣ Verifikasi Data di HDFS
-
+#### Verifikasi Data di HDFS
 hdfs dfs -ls /user/hadoop/employees
 hdfs dfs -cat /user/hadoop/employees/part-m-00000
 
-Hasil:
+
+- Hasil:
 
 1,Andi
 2,Budi
 3,Citra
 
-#### Analisis
-
-1️⃣ Sqoop mempermudah integrasi data terstruktur dari database ke Hadoop.
-2️⃣ Proses berjalan paralel menggunakan MapReduce.
-3️⃣ Cocok untuk pemindahan data batch skala besar.
-
 ## Sesi 2 — Apache Flume (Ingestion Data Log)
 
-### Konfigurasi Flume Agent
+---
+
+### Langkah Praktikum
+
+Konfigurasi Flume Agent
 
 File: netcat-logger.conf
 
-# Agent components
+- Agent components
 a1.sources = r1
 a1.sinks = k1
 a1.channels = c1
 
-# Source
+- Source
 a1.sources.r1.type = netcat
 a1.sources.r1.bind = localhost
 a1.sources.r1.port = 44444
 
-# Sink
+- Sink
 a1.sinks.k1.type = logger
 
-# Channel
+- Channel
 a1.channels.c1.type = memory
 a1.channels.c1.capacity = 1000
 a1.channels.c1.transactionCapacity = 100
 
-# Bind
+- Bind
 a1.sources.r1.channels = c1
 a1.sinks.k1.channel = c1
 
-Menjalankan Flume
+- Menjalankan Flume
 
 ./bin/flume-ng agent \
 --conf conf \
@@ -120,33 +104,37 @@ Menjalankan Flume
 --name a1 \
 -Dflume.root.logger=INFO,console
 
-Mengirim data
+- Mengirim data
 
 telnet localhost 44444
+
+- Ketik:
 
 Hello Flume
 Ini data log pertama
 
 ## Sesi 3 — Apache Kafka (Streaming Data Real-Time)
 
-###Langkah Praktikum
-1️⃣ Menjalankan Zookeeper & Kafka
-./bin/zookeeper-server-start.sh config/zookeeper.properties
+---
 
+### Langkah Praktikum
+
+- 1️⃣ Menjalankan Zookeeper & Kafka
+
+./bin/zookeeper-server-start.sh config/zookeeper.properties
 ./bin/kafka-server-start.sh config/server.properties
 
-2️⃣ Membuat Topic
+- 2️⃣ Membuat Topic
 ./bin/kafka-topics.sh --create \
 --topic uji-praktikum \
 --bootstrap-server localhost:9092 \
 --partitions 1 \
 --replication-factor 1
 
-3️⃣ Menjalankan Producer
+- 3️⃣ Menjalankan Producer
 ./bin/kafka-console-producer.sh \
 --topic uji-praktikum \
 --bootstrap-server localhost:9092
-
 
 Pesan:
 
@@ -154,7 +142,7 @@ Pesan pertama untuk Kafka
 Ini adalah tes sistem pesan
 Praktikum berhasil
 
-4️⃣ Menjalankan Consumer
+- 4️⃣ Menjalankan Consumer
 ./bin/kafka-console-consumer.sh \
 --topic uji-praktikum \
 --from-beginning \
