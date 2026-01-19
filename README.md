@@ -18,7 +18,7 @@
 
 ---
 
-## Sesi 1 — Apache Sqoop (Integrasi Database ke HDFS)
+## Apache Sqoop (Integrasi Database ke HDFS)
 
 ### Dasar Teori
 
