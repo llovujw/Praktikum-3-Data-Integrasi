@@ -129,3 +129,33 @@ Ini data log pertama
 
 ## Sesi 3 — Apache Kafka (Streaming Data Real-Time)
 
+###Langkah Praktikum
+1️⃣ Menjalankan Zookeeper & Kafka
+./bin/zookeeper-server-start.sh config/zookeeper.properties
+
+./bin/kafka-server-start.sh config/server.properties
+
+2️⃣ Membuat Topic
+./bin/kafka-topics.sh --create \
+--topic uji-praktikum \
+--bootstrap-server localhost:9092 \
+--partitions 1 \
+--replication-factor 1
+
+3️⃣ Menjalankan Producer
+./bin/kafka-console-producer.sh \
+--topic uji-praktikum \
+--bootstrap-server localhost:9092
+
+
+Pesan:
+
+Pesan pertama untuk Kafka
+Ini adalah tes sistem pesan
+Praktikum berhasil
+
+4️⃣ Menjalankan Consumer
+./bin/kafka-console-consumer.sh \
+--topic uji-praktikum \
+--from-beginning \
+--bootstrap-server localhost:9092
